@@ -124,7 +124,7 @@ public class Solver {
     public List<Variable> getSolution() {
         Landscape currentState = new Landscape(input.getLandscape());
 
-        List<Variable> variables = VariableMapper.mapInputToVariable(input.getLandscape().length);
+        List<Variable> variables = Mapper.mapInputToVariable(input.getLandscape().length);
 
         for (var variable : variables) {
             sortVariableDomainUsingLCV(variable, currentState);
