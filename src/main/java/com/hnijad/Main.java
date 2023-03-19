@@ -25,8 +25,8 @@ public class Main {
     }
 
 
-    private static void solveWithAC3(String filename) throws Exception {
-        Input input = FileParser.getInput(filename);
+    private static void solveWithAC3(String filename) {
+        Input input = FileParser.parseFile(filename);
         System.out.println("Finished parsing file=" + filename);
 
         Solver solver = new Solver(input);
@@ -37,11 +37,33 @@ public class Main {
 
         LocalDateTime end = LocalDateTime.now();
 
+        long seconds = Duration.between(start, end).getSeconds();
+
         if (solution != null) {
-            System.out.println("Solution found using AC3 in " + Duration.between(start, end).getSeconds() + " seconds");
+            System.out.println("Solution found using AC3 in " + seconds  + " seconds");
             solver.print();
         } else {
-            System.out.println("No solution found using AC3");
+            System.out.println("No solution found using AC3 in " + seconds + " seconds");
+        }
+    }
+
+    private static void solveWithBasicBackTracking(String filename) throws Exception {
+        Input input = FileParser.getInput(filename);
+        System.out.println("Finished parsing file=" + filename);
+
+        Solver solver = new Solver(input);
+
+        LocalDateTime start = LocalDateTime.now();
+
+        var solution = solver.getSolutionUsingSimpleBackTracking();
+
+        LocalDateTime end = LocalDateTime.now();
+
+        if (solution != null) {
+            System.out.println("Solution found using backtracking " + Duration.between(start, end).getSeconds() + " seconds");
+            solver.print();
+        } else {
+            System.out.println("No solution found using backtracking");
         }
     }
 }

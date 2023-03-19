@@ -43,8 +43,8 @@ public class FileParser {
     public static Input parseFile(String fileName) {
         int type = -1;
         List<String> landscapeStr = new ArrayList<>();
-        List<String> targetStrings = new ArrayList<>();
-        String tiles = "";
+        List<String> targetStrs = new ArrayList<>();
+        String tileStr = "";
         try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
             String line;
             while ((line = reader.readLine()) != null) {
@@ -63,18 +63,18 @@ public class FileParser {
                     landscapeStr.add(line);
                 }
                 if (type == 2) {
-                    tiles = line;
+                    tileStr = line;
                 }
                 if (type == 3) {
-                    targetStrings.add(line);
+                    targetStrs.add(line);
                 }
             }
         } catch (IOException ex) {
             System.out.println("Exception happened in FileParser.parseFile");
             ex.printStackTrace();
         }
-        int[] tileArr = mapTilesToArray(tiles);
-        int[] target = mapTargetStringsToArray(targetStrings);
+        int[] tileArr = mapTilesToArray(tileStr);
+        int[] target = mapTargetStringsToArray(targetStrs);
         int[][] landscape = mapLandscapeTo2DArray(landscapeStr);
         return new Input(landscape, tileArr, target);
     }
