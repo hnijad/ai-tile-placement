@@ -7,6 +7,7 @@ import com.hnijad.model.Variable;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -15,7 +16,7 @@ import static com.hnijad.model.Tile.*;
 public class Main {
     public static void main(String[] args) {
         try {
-            String filename = "in";
+            String filename = "input/in";
             for (int i = 5; i < 6; i++) {
                 solveWithAC3(filename + i + ".txt");
             }

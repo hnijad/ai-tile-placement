@@ -42,14 +42,14 @@ public class Solver {
                 availableTiles[domain.getIndex()]--;
 
                 copiedVariables.get(ind).setValue(domain.name());
-                copiedVariables.get(ind).setDomain(List.of(domain.name()));
+                copiedVariables.get(ind).setDomain(new ArrayList<>(Arrays.asList(domain.name())));
 
                 if (!currentState.isConstraintViolated(constraint)) {
                     Landscape newLandscape = new Landscape(currentState);
-                    //runAC3(ind, copiedVariables, newLandscape, constraint);
-
-                    if (backTrackWithConstraint(copiedVariables, currentState, availableTiles, constraint)) {
-                        return true;
+                    if (ac3(ind, copiedVariables, newLandscape, constraint)) {
+                        if (backTrackWithConstraint(copiedVariables, currentState, availableTiles, constraint)) {
+                            return true;
+                        }
                     }
                 }
 
@@ -58,13 +58,11 @@ public class Solver {
 
                 // restore domain
                 copiedVariables.get(ind).setValue(null);
-                copiedVariables.get(ind).setDomain(variables.get(ind).getDomain());
-//                for (int i = 0; i < variables.size(); i++) {
-//                    copiedVariables.get(i).setDomain(variables.get(i).getDomain());
-//                }
+                for (int i = 0; i < variables.size(); i++) {
+                    copiedVariables.get(i).setDomain(variables.get(i).getDomain());
+                }
             }
         }
-
         return false;
     }
 
@@ -82,62 +80,45 @@ public class Solver {
         return index;
     }
 
-    public void runAC3(int index, List<Variable> variables, Landscape currentState, int[] constraint) {
-
-        int n = variables.size();
-        for (int i = 0; i < n; i++) {
-            if (i == index) continue;
-            enforceArcConsistency(variables.get(index), variables.get(i), currentState, constraint);
+    public boolean ac3(int index, List<Variable> variables, Landscape currentState, int[] constraint) {
+        int landscapeSize = currentState.getCellStates().length;
+        Queue<Variable> queue = new ArrayDeque<>();
+        queue.add(variables.get(index));
+        while (!queue.isEmpty()) {
+            var x = queue.poll();
+            for (int i : x.getNeighboursIndex(landscapeSize / 4)) {
+                if (revise(x, variables.get(i), currentState, constraint)) {
+                    if (variables.get(i).getDomain().isEmpty()) {
+                        return false;
+                    }
+                    queue.add(variables.get(i));
+                }
+            }
         }
-
-//        Queue<Variable> queue = new ArrayDeque<>();
-//        queue.add(variables.get(index));
-//
-//
-//
-//        int n = variables.size();
-//
-//        while (!queue.isEmpty()) {
-//            var x = queue.poll();
-//            for (int i = 0; i < n; i++) {
-//                if (variables.get(i).equals(x)) continue;
-//                boolean changed = enforceArcConsistency(x, variables.get(i), currentState, constraint);
-//                if (changed) {
-//                    if (variables.get(i).getDomain().isEmpty()) {
-//                        return;
-//                    }
-//                    queue.add(variables.get(i));
-//                }
-//            }
-//        }
-        //System.out.println("After" + variables);
+        return true;
     }
 
-    public boolean enforceArcConsistency(Variable x, Variable y, Landscape landscape, int[] constraint) {
-        List<String> newDomain = new ArrayList<>();
+    public boolean revise(Variable x, Variable y, Landscape landscape, int[] constraint) {
+        boolean revised = false;
+        List<String> toBeRemoved = new ArrayList<>();
         for (var yDomain : y.getDomain()) {
-            //newLandscape.placeTile(y.getRow(), y.getCol(), yDomain);
-            boolean anyXDomainExists = false;
+            boolean noDomainExists = true;
             for (var xDomain: x.getDomain()) {
                 Landscape newLandscape = new Landscape(landscape);
                 newLandscape.placeTile(y.getRow(), y.getCol(), Tile.valueOf(yDomain));
                 newLandscape.placeTile(x.getRow(), x.getCol(), Tile.valueOf(xDomain));
                 if (!newLandscape.isConstraintViolated(constraint)) {
-                    anyXDomainExists = true;
+                    noDomainExists = false;
                 }
-                //landscape.rollBackTilePlacement(x.getRow(), y.getCol());
-                if (anyXDomainExists) break;
+                if (!noDomainExists) break;
             }
-            if (anyXDomainExists) {
-                newDomain.add(yDomain);
+            if (noDomainExists) {
+                toBeRemoved.add(yDomain);
+                revised = true;
             }
-            //landscape.rollBackTilePlacement(y.getRow(), y.getCol());
         }
-        if (newDomain.size() == y.getDomain().size()) {
-            return false;
-        }
-        y.setDomain(newDomain);
-        return true;
+        y.getDomain().removeAll(toBeRemoved);
+        return revised;
     }
 
     public List<Variable> getSolution() {
@@ -146,17 +127,9 @@ public class Solver {
         List<Variable> variables = VariableMapper.mapInputToVariable(input.getLandscape());
 
 
-        for (Variable variable : variables) {
-            System.out.println(variable);
-            sortVariableDomainUsingLCV(variable, currentState);
-            System.out.println(variable);
+        if (backTrackWithConstraint(variables, currentState, input.getTiles(), input.getTarget())) {
+            return this.assignedValues;
         }
-
-
-
-//        if (backTrackWithConstraint(variables, currentState, input.getTiles(), input.getTarget())) {
-//            return this.assignedValues;
-//        }
         return null;
     }
 
