@@ -41,6 +41,6 @@ public class CellState {
         if (isVisible) {
             return String.valueOf(bushNumber);
         }
-        return " ";
+        return cover.substring(0, 1);
     }
 }

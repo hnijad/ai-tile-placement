@@ -49,11 +49,9 @@ public class Landscape {
     }
 
     public void placeTile(int row, int col, Tile tile) {
-//        if (this.cellStates[row][col].getCover() != null) {
-//            // this should not happen
-//            System.out.println("Row=" + row + ",Col = " + col + ",tile=" + tile.name());
-//            throw new IllegalStateException("tile is already placed");
-//        }
+        if (this.cellStates[row][col].getCover() != null) {
+           return;
+        }
         for (int i = 0; i < Constants.TILES_SIZE; i++) {
             for (int j = 0; j < Constants.TILES_SIZE; j++) {
                 var cellState = this.cellStates[i + row][j + col];
@@ -81,6 +79,9 @@ public class Landscape {
     }
 
     public void rollBackTilePlacement(int row, int col) {
+        if (this.cellStates[row][col].getCover() == null) {
+            return;
+        }
         for (int i = 0; i < Constants.TILES_SIZE; i++) {
             for (int j = 0; j < Constants.TILES_SIZE; j++) {
                 var cellState = this.cellStates[i + row][j + col];
