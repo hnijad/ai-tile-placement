@@ -40,6 +40,7 @@ public class Main {
 
         if (solution != null) {
             System.out.println("Solution found using AC3 in " + Duration.between(start, end).getSeconds() + " seconds");
+            solver.print();
         } else {
             System.out.println("No solution found using AC3");
         }

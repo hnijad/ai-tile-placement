@@ -126,6 +126,9 @@ public class Solver {
 
         List<Variable> variables = VariableMapper.mapInputToVariable(input.getLandscape());
 
+        for (var variable : variables) {
+            sortVariableDomainUsingLCV(variable, currentState);
+        }
 
         if (backTrackWithConstraint(variables, currentState, input.getTiles(), input.getTarget())) {
             return this.assignedValues;
@@ -179,5 +182,15 @@ public class Solver {
             return this.foundSolution;
         }
         return null;
+    }
+
+    public void print() {
+        if (this.foundSolution!= null) {
+            System.out.println("# Landscape");
+            this.foundSolution.print();
+
+            System.out.println("# Variables");
+            this.assignedValues.forEach(Variable::print);
+        }
     }
 }
