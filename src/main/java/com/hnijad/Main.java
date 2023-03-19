@@ -16,11 +16,8 @@ import static com.hnijad.model.Tile.*;
 public class Main {
     public static void main(String[] args) {
         try {
-            String filename = "input/in";
-            for (int i = 5; i < 6; i++) {
-                solveWithAC3(filename + i + ".txt");
-            }
-
+            String filePath = args[0];
+            solveWithAC3(filePath);
         } catch (Exception e) {
             System.out.println("Exception happened:  " + e);
         }
@@ -29,6 +26,7 @@ public class Main {
 
     private static void solveWithAC3(String filename) throws Exception {
         Input input = FileParser.getInput(filename);
+        System.out.println("Finished parsing file=" + filename);
 
         Solver solver = new Solver(input);
 

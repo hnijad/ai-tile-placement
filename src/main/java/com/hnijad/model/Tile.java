@@ -13,7 +13,7 @@ public enum Tile {
             {false, true, true, true},
             {false, false, false, false}
     }, 2),
-    OUTER_BOUNDARY(new boolean[][]{
+    BOUNDARY(new boolean[][]{
             {false, false, false, false},
             {false, true, true, false},
             {false, true, true, false},

@@ -22,7 +22,7 @@ public class Solver {
                                             int[] constraint) {
         int ind = getVariableUsingMRV(variables);
 
-        if (ind==-1 && currentState.isConstraintSatisfied(constraint)) {
+        if (ind == -1 && currentState.isConstraintSatisfied(constraint)) {
             this.foundSolution = currentState;
             this.assignedValues = variables;
             return true;
@@ -42,7 +42,7 @@ public class Solver {
                 availableTiles[domain.getIndex()]--;
 
                 copiedVariables.get(ind).setValue(domain.name());
-                copiedVariables.get(ind).setDomain(new ArrayList<>(Arrays.asList(domain.name())));
+                copiedVariables.get(ind).setDomain(new ArrayList<>(List.of(domain.name())));
 
                 if (!currentState.isConstraintViolated(constraint)) {
                     Landscape newLandscape = new Landscape(currentState);
@@ -103,7 +103,7 @@ public class Solver {
         List<String> toBeRemoved = new ArrayList<>();
         for (var yDomain : y.getDomain()) {
             boolean noDomainExists = true;
-            for (var xDomain: x.getDomain()) {
+            for (var xDomain : x.getDomain()) {
                 Landscape newLandscape = new Landscape(landscape);
                 newLandscape.placeTile(y.getRow(), y.getCol(), Tile.valueOf(yDomain));
                 newLandscape.placeTile(x.getRow(), x.getCol(), Tile.valueOf(xDomain));
@@ -124,7 +124,7 @@ public class Solver {
     public List<Variable> getSolution() {
         Landscape currentState = new Landscape(input.getLandscape());
 
-        List<Variable> variables = VariableMapper.mapInputToVariable(input.getLandscape());
+        List<Variable> variables = VariableMapper.mapInputToVariable(input.getLandscape().length);
 
         for (var variable : variables) {
             sortVariableDomainUsingLCV(variable, currentState);
@@ -185,10 +185,12 @@ public class Solver {
     }
 
     public void print() {
-        if (this.foundSolution!= null) {
+        if (this.foundSolution != null) {
             System.out.println("# Landscape");
             this.foundSolution.print();
-
+        }
+        System.out.println();
+        if (this.assignedValues != null) {
             System.out.println("# Variables");
             this.assignedValues.forEach(Variable::print);
         }

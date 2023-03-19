@@ -27,9 +27,7 @@ public class Variable {
         this.row = variable.getRow();
         this.value = variable.getValue();
         this.domain = new ArrayList<>();
-        for (var x : variable.getDomain()) {
-            domain.add(x);
-        }
+        domain.addAll(variable.getDomain());
     }
 
     public void setValue(String value) {
@@ -71,7 +69,7 @@ public class Variable {
     }
 
     public void print() {
-        System.out.println("row = " + row + ", col = " + col + ", index =" + index + ", value = " + value);
+        System.out.println("row = " + row + ", col = " + col + ", index = " + index + ", value = " + value);
     }
 
     @Override
