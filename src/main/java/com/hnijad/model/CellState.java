@@ -39,7 +39,7 @@ public class CellState {
     @Override
     public String toString() {
         if (isVisible) {
-            return String.valueOf(bushNumber);
+            return String.valueOf(bushNumber );
         }
         return cover.substring(0, 1);
     }
