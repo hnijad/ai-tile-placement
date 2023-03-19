@@ -63,13 +63,13 @@ public class Mapper {
     public static int[][] mapLandscapeTo2DArray(List<String> landscape) {
 
 
-        int grisSize = landscape.size();
+        int gridSize = landscape.size();
 
-        if (grisSize % 4 != 0) {
+        if (gridSize % 4 != 0) {
             throw new IllegalStateException("Grid size should be divisible by 4");
         }
 
-        int[][] grid = new int[grisSize][grisSize];
+        int[][] grid = new int[gridSize][gridSize];
         int gridI = 0;
         int gridJ = 0;
 
@@ -90,7 +90,7 @@ public class Mapper {
                     }
                 }
             }
-            while (sb.length() != (2 * grisSize - 1) ) {
+            while (sb.length() != (2 * gridSize) ) {
                 if (prev == ' ') {
                     sb.append('0');
                     prev = '0';
