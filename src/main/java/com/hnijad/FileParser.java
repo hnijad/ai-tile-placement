@@ -2,15 +2,17 @@ package com.hnijad;
 
 import com.hnijad.model.Input;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.util.Scanner;
+import java.io.*;
+import java.util.*;
 
+import static com.hnijad.Mapper.mapTilesToArray;
+import static com.hnijad.Mapper.mapLandscapeTo2DArray;
+import static com.hnijad.Mapper.mapTargetStringsToArray;
 import static com.hnijad.model.Constants.MAX_BUSH_NUM;
 import static com.hnijad.model.Constants.MAX_TILES_NUM;
 
 public class FileParser {
-    private FileParser() {
+    public FileParser() {
     }
 
     public static Input getInput(String fileName) throws FileNotFoundException {
@@ -36,5 +38,44 @@ public class FileParser {
 
         reader.close();
         return new Input(landscape, tiles, target);
+    }
+
+    public static Input parseFile(String fileName) {
+        int type = -1;
+        List<String> landscapeStr = new ArrayList<>();
+        List<String> targetStrings = new ArrayList<>();
+        String tiles = "";
+        try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                if (line.isBlank()) continue;
+                if (line.startsWith("# Landscape")) {
+                    type = 1;
+                    continue;
+                } else if (line.startsWith("# Tiles")) {
+                    type = 2;
+                    continue;
+                } else if (line.startsWith("# Targets")) {
+                    type = 3;
+                    continue;
+                }
+                if (type == 1) {
+                    landscapeStr.add(line);
+                }
+                if (type == 2) {
+                    tiles = line;
+                }
+                if (type == 3) {
+                    targetStrings.add(line);
+                }
+            }
+        } catch (IOException ex) {
+            System.out.println("Exception happened in FileParser.parseFile");
+            ex.printStackTrace();
+        }
+        int[] tileArr = mapTilesToArray(tiles);
+        int[] target = mapTargetStringsToArray(targetStrings);
+        int[][] landscape = mapLandscapeTo2DArray(landscapeStr);
+        return new Input(landscape, tileArr, target);
     }
 }

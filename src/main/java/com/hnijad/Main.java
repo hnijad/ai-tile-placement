@@ -20,6 +20,7 @@ public class Main {
             solveWithAC3(filePath);
         } catch (Exception e) {
             System.out.println("Exception happened:  " + e);
+            e.printStackTrace();
         }
     }
 
