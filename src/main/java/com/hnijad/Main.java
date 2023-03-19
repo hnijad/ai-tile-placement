@@ -59,11 +59,13 @@ public class Main {
 
         LocalDateTime end = LocalDateTime.now();
 
+        long seconds = Duration.between(start, end).getSeconds();
+
         if (solution != null) {
-            System.out.println("Solution found using backtracking " + Duration.between(start, end).getSeconds() + " seconds");
+            System.out.println("Solution found using backtracking " + seconds + " seconds");
             solver.print();
         } else {
-            System.out.println("No solution found using backtracking");
+            System.out.println("No solution found using backtracking in " + seconds + " seconds" );
         }
     }
 }

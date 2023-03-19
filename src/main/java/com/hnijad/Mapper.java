@@ -54,9 +54,9 @@ public class Mapper {
             map.put(key, value);
         }
         int[] tileArr = new int[MAX_TILES_NUM];
-        tileArr[0] = map.get("FULL_BLOCK");
-        tileArr[1] = map.get("OUTER_BOUNDARY");
-        tileArr[2] = map.get("EL_SHAPE");
+        tileArr[0] = map.getOrDefault("FULL_BLOCK", 0);
+        tileArr[1] = map.getOrDefault("OUTER_BOUNDARY", 0);
+        tileArr[2] = map.getOrDefault("EL_SHAPE", 0);
         return tileArr;
     }
 
